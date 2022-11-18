@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ImageController">
+   <children>
+      <ImageView id="imageAdd_image" fx:id="imageView" fitHeight="480.0" fitWidth="480.0" layoutX="120.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true" style="-fx-alignment: center;" />
+      <Button layoutX="193.0" layoutY="540.0" mnemonicParsing="false" onAction="#loadImage" prefHeight="36.0" prefWidth="161.0" text="Load image" textAlignment="CENTER">
+         <font>
+            <Font name="Open Sans Regular" size="17.0" />
+         </font>
+      </Button>
+      <Button layoutX="193.0" layoutY="606.0" mnemonicParsing="false" onAction="#goBackImage" prefHeight="36.0" prefWidth="161.0" text="Add this image">
+         <font>
+            <Font name="Open Sans Regular" size="17.0" />
+         </font>
+      </Button>
+      <Separator layoutX="82.0" layoutY="520.0" prefHeight="7.0" prefWidth="556.0" />
+      <ProgressBar fx:id="progressBar" layoutX="388.0" layoutY="540.0" prefHeight="36.0" prefWidth="161.0" progress="0.0" />
+      <Label fx:id="progressLabel" layoutX="416.0" layoutY="548.0" prefHeight="17.0" prefWidth="143.0" textAlignment="CENTER">
+         <font>
+            <Font name="Open Sans Regular" size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
