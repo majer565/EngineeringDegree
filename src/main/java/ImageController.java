@@ -7,9 +7,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
-
-
 import org.apache.commons.io.FileUtils;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -47,20 +46,19 @@ public class ImageController implements Initializable {
 
         File file = chooser.showOpenDialog(null);
 
-        File saveFile = new File("src/main/images/" + file.getName());
+        File saveFile = new File("./src/main/images/loaded_image.jpg");
 
         try {
 
             BufferedImage bufferedImage = ImageIO.read(file);
 
-            if(!isEmpty(Path.of("src/main/images/"))) {
+            if(!isEmpty(Path.of("/src/main/images/"))) {
                 FileUtils.cleanDirectory(new File("src/main/images/"));
             }
 
             ImageIO.write(bufferedImage, "jpg", saveFile);
 
-            Image image = new Image(saveFile.getAbsolutePath());
-
+            Image image = new Image(saveFile.toURI().toString());
             imageView.setImage(image);
 
             progressBar.setStyle("-fx-accent: #25e72c;");
@@ -69,6 +67,7 @@ public class ImageController implements Initializable {
 
         } catch (Exception e) {
             e.getCause();
+            e.printStackTrace();
             progressBar.setStyle("-fx-accent: #B50015;");
             progressBar.setProgress(1);
             progressLabel.setText("Can't load image");
@@ -78,7 +77,7 @@ public class ImageController implements Initializable {
     public void goBackImage(ActionEvent event) {
 
         try {
-            BufferedImage bufferedImage = ImageIO.read(new File(imageView.getImage().getUrl()));
+            BufferedImage bufferedImage = ImageIO.read(new File("./src/main/images/loaded_image.jpg"));
 
             if(saveJpg(convertToBW(bufferedImage), "Image_BW")) {
                 System.out.println("saved");
@@ -89,6 +88,7 @@ public class ImageController implements Initializable {
             } else System.out.println("kys");
 
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("cant load");
         }
 
