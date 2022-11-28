@@ -4,29 +4,78 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ImageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ImageController">
    <children>
-      <ImageView id="imageAdd_image" fx:id="imageView" fitHeight="480.0" fitWidth="480.0" layoutX="120.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true" style="-fx-alignment: center;" />
-      <Button layoutX="193.0" layoutY="540.0" mnemonicParsing="false" onAction="#loadImage" prefHeight="36.0" prefWidth="161.0" text="Load image" textAlignment="CENTER">
+      <Button layoutX="148.0" layoutY="210.0" mnemonicParsing="false" onAction="#loadImage" prefHeight="61.0" prefWidth="215.0" text="Load new image" textAlignment="CENTER">
          <font>
             <Font name="Open Sans Regular" size="17.0" />
          </font>
       </Button>
-      <Button layoutX="193.0" layoutY="606.0" mnemonicParsing="false" onAction="#goBackImage" prefHeight="36.0" prefWidth="161.0" text="Add this image">
+      <Button layoutX="133.0" layoutY="407.0" mnemonicParsing="false" onAction="#convertLoadedImage" prefHeight="42.0" prefWidth="246.0" text="Convert to B&amp;W">
          <font>
             <Font name="Open Sans Regular" size="17.0" />
          </font>
       </Button>
-      <Separator layoutX="82.0" layoutY="520.0" prefHeight="7.0" prefWidth="556.0" />
-      <ProgressBar fx:id="progressBar" layoutX="388.0" layoutY="540.0" prefHeight="36.0" prefWidth="161.0" progress="0.0" />
-      <Label fx:id="progressLabel" layoutX="416.0" layoutY="548.0" prefHeight="17.0" prefWidth="143.0" textAlignment="CENTER">
+      <ProgressBar fx:id="progressBar" layoutX="175.0" layoutY="294.0" prefHeight="36.0" prefWidth="161.0" progress="0.0" />
+      <Label layoutX="629.0" layoutY="14.0" prefHeight="72.0" prefWidth="234.0" text="Current image">
          <font>
-            <Font name="Open Sans Regular" size="14.0" />
+            <Font size="36.0" />
          </font>
       </Label>
+      <Separator layoutX="120.0" layoutY="380.0" prefHeight="0.0" prefWidth="271.0" />
+      <Label fx:id="progressLabel" layoutX="149.0" layoutY="340.0" prefHeight="17.0" prefWidth="215.0" textAlignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TabPane layoutX="459.0" layoutY="89.0" prefHeight="543.0" prefWidth="574.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Loaded image">
+            <content>
+              <AnchorPane fx:id="loadedImagePane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ImageView id="imageAdd_image" fx:id="loadedImageView" fitHeight="480.0" fitWidth="480.0" layoutX="47.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" style="-fx-alignment: center;" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="BW image">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="BWImageView" fitHeight="480.0" fitWidth="480.0" layoutX="47.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="WB image">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="WBImageView" fitHeight="480.0" fitWidth="480.0" layoutX="47.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Separator layoutX="121.0" layoutY="475.0" prefHeight="0.0" prefWidth="271.0" />
+      <Separator layoutX="120.0" layoutY="182.0" prefHeight="0.0" prefWidth="271.0" />
+      <Label layoutX="164.0" layoutY="138.0" prefHeight="32.0" prefWidth="183.0" text="Follow these steps">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Button layoutX="196.0" layoutY="506.0" mnemonicParsing="false" onAction="#closeImageWindow" prefHeight="39.0" prefWidth="119.0" text="Close">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

@@ -14,7 +14,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="Connection">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#connectionConfigure" text="Configure" />
+              <MenuItem mnemonicParsing="false" onAction="#cameraConnectionConfigure" text="Camera" />
+                  <MenuItem mnemonicParsing="false" onAction="#deviceConnectionConfigure" text="Device" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Image">
