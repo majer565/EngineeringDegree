@@ -47,7 +47,7 @@ public class MainController implements Initializable {
         //WebcamUtils.capture(webcam, "camera.jpg");
 
         if(!openStage("cameraConfig.fxml")) {
-            System.out.println(new Date(System.currentTimeMillis()) + ": Could not open deviceConfig.fxml stage [001]");
+            System.out.println(new Date(System.currentTimeMillis()) + ": Could not open cameraConfig.fxml stage [002]");
         }
     }
 
@@ -55,7 +55,7 @@ public class MainController implements Initializable {
     public void imageAdd(ActionEvent event){
 
         if(!openStage("imageAdd.fxml")) {
-            System.out.println(new Date(System.currentTimeMillis()) + ": Could not open deviceConfig.fxml stage [001]");
+            System.out.println(new Date(System.currentTimeMillis()) + ": Could not open imageAdd.fxml stage [003]");
         }
 
     }

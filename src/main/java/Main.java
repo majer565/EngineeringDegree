@@ -4,7 +4,7 @@ public class Main {
     private static boolean connectDeviceStatus;
 
     public static void main(String[] args) {
-        JavaFXStart.main(args);
+        JavaFXClass.main(args);
     }
 
     public static boolean isConnectDeviceStatus() {
