@@ -1,13 +1,8 @@
 import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamPanel;
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import com.github.sarxos.webcam.WebcamResolution;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,11 +10,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
-import javax.swing.*;
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class CameraController implements Initializable {
@@ -38,7 +36,10 @@ public class CameraController implements Initializable {
     private ImageView cameraImageView;
 
     @FXML
-    private Pane cameraPanel;
+    private ImageView cameraTakenImage;
+
+    @FXML
+    private Button takeImageButton;
 
     private class WebCamInfo {
 
@@ -67,16 +68,17 @@ public class CameraController implements Initializable {
         }
     }
 
-    private ObjectProperty<Image> imageProperty = new SimpleObjectProperty<>();
-    private boolean stopCamera = false;
-    private BufferedImage grabbedImage;
-    private Webcam selWebCam = null;
+    private boolean stopCamera = true;
+    private Webcam chosenWebCam = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        takeImageButton.setDisable(true);
+
         ObservableList<WebCamInfo> options = FXCollections.observableArrayList();
         int webCamCounter = 0;
+
         for (Webcam webcam : Webcam.getWebcams()) {
             WebCamInfo webCamInfo = new WebCamInfo();
             webCamInfo.setWebCamIndex(webCamCounter);
@@ -89,98 +91,101 @@ public class CameraController implements Initializable {
         cameraChoice.setPromptText("Choose camera...");
         cameraChoice.setOnAction(this::initializeWebCam);
 
+        cameraImageView.setFitHeight(270);
+        cameraImageView.setFitWidth(480);
+        cameraImageView.setPreserveRatio(true);
+
     }
 
     protected void initializeWebCam(ActionEvent event) {
 
-        Webcam webcam = Webcam.getWebcamByName(cameraChoice.getValue().getWebCamName());
-        WebcamPanel panel = new WebcamPanel(webcam);
+        if(chosenWebCam != null) chosenWebCam.close();
 
-        final SwingNode swingNode = new SwingNode();
-        createAndSetSwingContent(swingNode, panel);
-
-        cameraPanel.getChildren().add(swingNode);
-
-        /*final int webCamIndex = cameraChoice.getValue().getWebCamIndex();
-
-        Task<Void> webCamInitializer = new Task<>() {
-
-            @Override
-            protected Void call() throws Exception {
-
-                if (selWebCam == null) {
-                    selWebCam = Webcam.getWebcams().get(webCamIndex);
-                    selWebCam.open();
-                } else {
-                    closeCamera();
-                    selWebCam = Webcam.getWebcams().get(webCamIndex);
-                    selWebCam.open();
-                }
-                return null;
-            }
-
-        };
-
-        new Thread(webCamInitializer).start();*/
-    }
-
-    private void createAndSetSwingContent(final SwingNode swingNode, WebcamPanel panel) {
-        SwingUtilities.invokeLater(() -> swingNode.setContent(panel));
-    }
-
-    private void closeCamera() {
-        if (selWebCam != null) {
-            selWebCam.close();
-        }
+        chosenWebCam = Webcam.getWebcamByName(cameraChoice.getValue().getWebCamName());
+        chosenWebCam.setCustomViewSizes(new Dimension(1920, 1080));
+        chosenWebCam.setViewSize(WebcamResolution.FHD.getSize());
+        takeImageButton.setDisable(false);
     }
 
     public void startCameraPreview(ActionEvent event) {
-        startWebCamStream();
-        startCameraPreviewButton.setDisable(true);
-        stopCameraPreviewButton.setDisable(false);
+        if(chosenWebCam != null) {
+            startCameraStream();
+            startCameraPreviewButton.setDisable(true);
+            stopCameraPreviewButton.setDisable(false);
+        }
     }
 
     public void stopCameraPreview(ActionEvent event) {
-        stopCamera = true;
-        startCameraPreviewButton.setDisable(false);
-        stopCameraPreviewButton.setDisable(true);
-        cameraImageView.setCache(false);
+        if(!stopCamera) {
+            stopCamera = true;
+            startCameraPreviewButton.setDisable(false);
+            stopCameraPreviewButton.setDisable(true);
+            cameraImageView.setCache(false);
+            chosenWebCam.close();
+        }
     }
 
-    protected void startWebCamStream() {
+    public void cameraTakeImage(ActionEvent event) {
+
+        if(chosenWebCam.open() && chosenWebCam != null) {
+            final BufferedImage image = chosenWebCam.getImage();
+            if(saveJpg(convertToBW(image), "./src/main/images/workspace")) {
+                cameraTakenImage.setImage(new Image(new File("./src/main/images/workspace.jpg").toURI().toString()));
+            } else {
+                System.out.println(new Date(System.currentTimeMillis()) + ": Could not save image [013]");
+            }
+        }
+
+    }
+
+    public void closeCameraWindow(ActionEvent event) {
+
+        if(chosenWebCam.open()) chosenWebCam.close();
+
+        Stage stage = (Stage) takeImageButton.getScene().getWindow();
+        stage.close();
+
+    }
+
+    protected void startCameraStream() {
 
         stopCamera = false;
-        Task<Void> task = new Task<>() {
+        chosenWebCam.open();
 
-            @Override
-            protected Void call() throws Exception {
+        Thread thread = new Thread(() -> {
 
-                while (!stopCamera) {
-                    try {
-                        if ((grabbedImage = selWebCam.getImage()) != null) {
-
-                            Platform.runLater(() -> {
-                                final Image mainImage = SwingFXUtils
-                                        .toFXImage(grabbedImage, null);
-                                imageProperty.set(mainImage);
-                            });
-
-                            grabbedImage.flush();
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                return null;
+            while(!stopCamera) {
+                final BufferedImage image = chosenWebCam.getImage();
+                final Image image2 = SwingFXUtils.toFXImage(image, null);
+                cameraImageView.setImage(image2);
             }
 
-        };
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start();
-        cameraImageView.imageProperty().bind(imageProperty);
+        });
 
+        thread.start();
+
+    }
+
+    private BufferedImage convertToBW(BufferedImage img) {
+
+        BufferedImage blackWhite = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
+        Graphics2D g2d = blackWhite.createGraphics();
+        g2d.drawImage(img, 0, 0, null);
+        g2d.dispose();
+
+        return blackWhite;
+    }
+
+    private boolean saveJpg(BufferedImage image, String filename) {
+
+        try{
+            if(ImageIO.write(image, "jpg", new File(filename + ".jpg"))) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
     }
 }

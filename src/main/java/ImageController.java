@@ -126,7 +126,7 @@ public class ImageController implements Initializable {
 
     }
 
-    public boolean isEmpty(Path path) throws IOException {
+    private boolean isEmpty(Path path) throws IOException {
         if (Files.isDirectory(path)) {
             try (DirectoryStream<Path> directory = Files.newDirectoryStream(path)) {
                 return !directory.iterator().hasNext();
@@ -136,7 +136,7 @@ public class ImageController implements Initializable {
         return false;
     }
 
-    public static BufferedImage convertToBW(BufferedImage img) {
+    private BufferedImage convertToBW(BufferedImage img) {
 
         BufferedImage blackWhite = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
         Graphics2D g2d = blackWhite.createGraphics();
@@ -146,7 +146,7 @@ public class ImageController implements Initializable {
         return blackWhite;
     }
 
-    public static BufferedImage reverseBW(BufferedImage img) {
+    private BufferedImage reverseBW(BufferedImage img) {
 
         BufferedImage newImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g2d = newImg.createGraphics();
@@ -170,7 +170,7 @@ public class ImageController implements Initializable {
 
     }
 
-    public static boolean saveJpg(BufferedImage image, String filename) {
+    private boolean saveJpg(BufferedImage image, String filename) {
 
         try{
             if(ImageIO.write(image, "jpg", new File(filename + ".jpg"))) {

@@ -1,13 +1,31 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.util.Date;
+import java.util.ResourceBundle;
 
-public class MainController {
+public class MainController implements Initializable {
+
+    @FXML
+    private ProgressBar deviceConnectionBar;
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        if(!Main.isConnectDeviceStatus()) {
+            deviceConnectionBar.setStyle("-fx-accent: #B50015;");
+            deviceConnectionBar.setProgress(1);
+        }
+
+    }
 
     @FXML
     public void deviceConnectionConfigure(ActionEvent event) {
@@ -62,5 +80,4 @@ public class MainController {
         }
 
     }
-
 }
