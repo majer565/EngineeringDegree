@@ -20,6 +20,7 @@ import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -46,14 +47,25 @@ public class ImageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            loadedImageView.setImage(new Image(new File("./src/main/images/loaded_image.jpg").toURI().toString()));
-            progressBar.setStyle("-fx-accent: #25e72c;");
-            progressBar.setProgress(1);
-            progressLabel.setText("Image properly loaded");
-            progressLabel.setAlignment(Pos.CENTER);
+            if(!isEmpty(Path.of("./src/main/images/"))) {
 
-            BWImageView.setImage(new Image(new File("./src/main/images/Image_BW.jpg").toURI().toString()));
-            WBImageView.setImage(new Image(new File("./src/main/images/Image_WB.jpg").toURI().toString()));
+                loadedImageView.setImage(new Image(new File("./src/main/images/loaded_image.jpg").toURI().toString()));
+                progressBar.setStyle("-fx-accent: #25e72c;");
+                progressBar.setProgress(1);
+                progressLabel.setText("Image properly loaded");
+                progressLabel.setAlignment(Pos.CENTER);
+
+                BWImageView.setImage(new Image(new File("./src/main/images/Image_BW.jpg").toURI().toString()));
+                WBImageView.setImage(new Image(new File("./src/main/images/Image_WB.jpg").toURI().toString()));
+
+            } else {
+
+                progressBar.setStyle("-fx-accent: #B50015;");
+                progressBar.setProgress(1);
+                progressLabel.setText("Image is not loaded");
+                progressLabel.setAlignment(Pos.CENTER);
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,6 +124,8 @@ public class ImageController implements Initializable {
                 WBImageView.setImage(new Image(new File("./src/main/images/Image_WB.jpg").toURI().toString()));
 
             } else System.out.println(new Date(System.currentTimeMillis()) + ": Could not convert image to wb [013]");
+
+            testImage();
 
         } catch (Exception e) {
             System.out.println(new Date(System.currentTimeMillis()) + ": Could not convert image [011]");
@@ -181,6 +195,32 @@ public class ImageController implements Initializable {
             return false;
         }
         return false;
+    }
+
+    private void testImage() throws IOException {
+
+        BufferedImage im1 = ImageIO.read(new File("./src/main/images/loaded_image.jpg"));
+        BufferedImage im2 = ImageIO.read(new File("./src/main/images/Image_BW.jpg"));
+
+        BufferedImage newImg = new BufferedImage(im1.getWidth() + im2.getWidth(),
+                                                im1.getHeight(),
+                                                BufferedImage.TYPE_INT_RGB);
+
+        Graphics g = newImg.getGraphics();
+
+        ArrayList<String> list = new ArrayList<>();
+        list.add("./src/main/images/loaded_image.jpg");
+        list.add("./src/main/images/Image_BW.jpg");
+
+        int x = 0, y = 0;
+
+        for(String image : list){
+            BufferedImage bi = ImageIO.read(new File(image));
+            g.drawImage(bi, x, y, null);
+            x += bi.getWidth();
+        }
+
+        saveJpg(newImg, "./src/main/images/test");
     }
 
 }

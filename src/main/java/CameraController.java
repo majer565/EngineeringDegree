@@ -41,6 +41,9 @@ public class CameraController implements Initializable {
     @FXML
     private Button takeImageButton;
 
+    @FXML
+    private Label speedNumber;
+
     private class WebCamInfo {
 
         private String webCamName;
@@ -140,9 +143,9 @@ public class CameraController implements Initializable {
 
     public void closeCameraWindow(ActionEvent event) {
 
-        if(chosenWebCam.open()) chosenWebCam.close();
+        if(!stopCamera) chosenWebCam.close();
 
-        Stage stage = (Stage) takeImageButton.getScene().getWindow();
+        Stage stage = (Stage) startCameraPreviewButton.getScene().getWindow();
         stage.close();
 
     }
