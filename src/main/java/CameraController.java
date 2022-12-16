@@ -12,7 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -40,36 +39,6 @@ public class CameraController implements Initializable {
 
     @FXML
     private Button takeImageButton;
-
-    @FXML
-    private Label speedNumber;
-
-    private class WebCamInfo {
-
-        private String webCamName;
-        private int webCamIndex;
-
-        public String getWebCamName() {
-            return webCamName;
-        }
-
-        public void setWebCamName(String webCamName) {
-            this.webCamName = webCamName;
-        }
-
-        public int getWebCamIndex() {
-            return webCamIndex;
-        }
-
-        public void setWebCamIndex(int webCamIndex) {
-            this.webCamIndex = webCamIndex;
-        }
-
-        @Override
-        public String toString() {
-            return webCamName;
-        }
-    }
 
     private boolean stopCamera = true;
     private Webcam chosenWebCam = null;
@@ -132,7 +101,7 @@ public class CameraController implements Initializable {
 
         if(chosenWebCam.open() && chosenWebCam != null) {
             final BufferedImage image = chosenWebCam.getImage();
-            if(saveJpg(convertToBW(image), "./src/main/images/workspace")) {
+            if(ImageController.saveJpg(ImageController.convertToBW(image), "./src/main/images/workspace")) {
                 cameraTakenImage.setImage(new Image(new File("./src/main/images/workspace.jpg").toURI().toString()));
             } else {
                 System.out.println(new Date(System.currentTimeMillis()) + ": Could not save image [013]");
@@ -167,28 +136,5 @@ public class CameraController implements Initializable {
 
         thread.start();
 
-    }
-
-    private BufferedImage convertToBW(BufferedImage img) {
-
-        BufferedImage blackWhite = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
-        Graphics2D g2d = blackWhite.createGraphics();
-        g2d.drawImage(img, 0, 0, null);
-        g2d.dispose();
-
-        return blackWhite;
-    }
-
-    private boolean saveJpg(BufferedImage image, String filename) {
-
-        try{
-            if(ImageIO.write(image, "jpg", new File(filename + ".jpg"))) {
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        return false;
     }
 }

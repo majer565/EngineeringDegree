@@ -43,8 +43,6 @@ public class ConnectionController {
             progressLabel.setText("Connected to the device");
             progressLabel.setAlignment(Pos.CENTER);
 
-            Main.setConnectDeviceStatus(true);
-
         }
 
     }
