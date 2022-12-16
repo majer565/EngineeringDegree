@@ -36,20 +36,6 @@ public class ArduinoController {
         }
     }
 
-    /**
-        direction - true(clockwise), false(counter-clockwise)
-        dirPin - direction pin
-        stepPin - stepper pin
-    */
-
-    private void stepperStep(boolean direction, byte dirPin, byte stepPin) {
-
-        if(isArduinoConnected) {
-            //...
-        }
-
-    }
-
     public boolean isArduinoConnected() {
         return isArduinoConnected;
     }
